@@ -196,9 +196,13 @@ module.exports = {
       attendanceRecords.forEach(record => {
         const studentName = record.student.name || "Unknown Student";
         const status = record.status;
-        doc.text(studentName, 50, doc.y, { continued: true });
-        doc.text(status, 400, doc.y);
-        doc.moveDown();
+        const y = doc.y;
+        const studentNameHeight = doc.heightOfString(studentName, { width: 340 }); // width from 50 to 390 approx
+        doc.text(studentName, 50, y, { width: 340 });
+        // Vertically center status text relative to student name height
+        const statusY = y + (studentNameHeight / 2) - (doc.currentLineHeight() / 2);
+        doc.text(status, 400, statusY);
+        doc.moveDown(studentNameHeight / doc.currentLineHeight());
       });
 
       // Finalize PDF
